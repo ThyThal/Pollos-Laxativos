@@ -25,6 +25,8 @@ public class PlayerModel : MonoBehaviourPun
     public bool CanAttack => _attackCooldown < 0;
     public bool CanDash => _dashCooldown < 0;
 
+    GameManagerFullAuth _manager;
+
     private void Awake()
     {
         if (_rigidbody == null) _rigidbody = GetComponent<Rigidbody2D>();
@@ -90,6 +92,12 @@ public class PlayerModel : MonoBehaviourPun
         _attackCooldown = _originalAttackCooldown;
     }
 
+    public void AttackFA()
+    {
+        GameManagerFullAuth.Instance.LevelManager.SpawnProjectile(this);
+        _attackCooldown = _originalAttackCooldown;
+    }
+
     [PunRPC]
     public void Die()
     {
@@ -112,6 +120,14 @@ public class PlayerModel : MonoBehaviourPun
         if (_dashCooldown > 0)
         {
             _dashCooldown -= Time.deltaTime;
+        }
+    }
+
+    public GameManagerFullAuth SetManager
+    {
+        set
+        {
+            _manager = value;
         }
     }
 
