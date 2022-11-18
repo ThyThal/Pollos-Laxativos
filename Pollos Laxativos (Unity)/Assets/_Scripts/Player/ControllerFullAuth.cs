@@ -12,12 +12,9 @@ public class ControllerFullAuth : MonoBehaviour
     private float _originalDashCooldown;
 
     [SerializeField] private KeyCode _dashKey = KeyCode.LeftShift;
-    public bool CanAttack => _attackCooldown < 0;
-    public bool CanDash => _dashCooldown < 0;
-    void Start()
-    {
-        MasterManager.Instance.RPCMaster("RequestConnectPlayer", PhotonNetwork.LocalPlayer);
-    }
+    public bool GameStarted => GameManagerFullAuth.Instance.LevelManager.GameStarted;
+    public bool CanAttack => GameStarted && _attackCooldown < 0;
+    public bool CanDash => GameStarted && _dashCooldown < 0;
 
     // Update is called once per frame
     void Update()
@@ -49,7 +46,7 @@ public class ControllerFullAuth : MonoBehaviour
         }
     }
 
-    private void AttackTimer() // Puse los cooldowns acá 
+    private void AttackTimer() // Puse los cooldowns acï¿½ 
     {
         if (_attackCooldown > 0)
         {

@@ -43,7 +43,11 @@ public class LevelManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        GameManager.Instance.LevelManager = this;
+        void Start()
+        {
+            MasterManager.Instance.RPCMaster("RequestConnectPlayer", PhotonNetwork.LocalPlayer);
+        }
+        
         _roomName.text = $"Room Name: {PhotonNetwork.CurrentRoom.Name.ToString()}";
         _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
     }
@@ -78,7 +82,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
     public void SpawnProjectile(PhotonView owner)
     {
         var projectile = PhotonNetwork.Instantiate("Projectile", owner.transform.position, owner.transform.rotation * Quaternion.Euler(0f, 0f, 180f));
-        projectile.GetComponent<Projectile>().Initialize(owner);
+        //projectile.GetComponent<Projectile>().Initialize(owner);
     }
 
     // Photon

@@ -45,7 +45,7 @@ public class MasterManager : MonoBehaviourPunCallbacks
     {
         
         //GameObject obj = PhotonNetwork.Instantiate("CharacterFullAuth", Vector3.zero, Quaternion.identity);
-        var character = GameManagerFullAuth.Instance.LevelManager.Spawn();
+        var character = GameManagerFullAuth.Instance.LevelManager.SpawnPlayer();
         photonView.RPC("UpdatePlayer", RpcTarget.All, client, character.photonView.ViewID);
     }
 
@@ -56,7 +56,6 @@ public class MasterManager : MonoBehaviourPunCallbacks
         var character = pv.gameObject.GetComponent<PlayerModel>();
         _dicChars[client] = character;
         _dicPlayer[character] = client;
-        gameManager.SetManager(character);
     }
 
     [PunRPC]

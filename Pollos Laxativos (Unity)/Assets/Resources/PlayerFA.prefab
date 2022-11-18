@@ -136,14 +136,14 @@ GameObject:
   - component: {fileID: 3025577082574871487}
   - component: {fileID: 6099258385472402045}
   - component: {fileID: 7901656521933751242}
-  - component: {fileID: 8116174377891888553}
+  - component: {fileID: 973433385167301079}
   - component: {fileID: 6611648447063587154}
   - component: {fileID: 4150835004572320145}
   - component: {fileID: -1949644509813155775}
   - component: {fileID: 7139349329011703345}
   - component: {fileID: 8715117108098501664}
   m_Layer: 3
-  m_Name: PlayerFullAuth
+  m_Name: PlayerFA
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -262,21 +262,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &8116174377891888553
+--- !u!114 &973433385167301079
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6713002546066098036}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3c3049ca8189184098c692f3bab66b0, type: 3}
+  m_Script: {fileID: 11500000, guid: cebb3f4f1b3e6f141926bbbb48920bfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attackCooldown: 0.4
+  _dashCooldown: 1
   _dashKey: 304
-  _playerModel: {fileID: 6611648447063587154}
-  _animator: {fileID: 0}
 --- !u!114 &6611648447063587154
 MonoBehaviour:
   m_ObjectHideFlags: 0

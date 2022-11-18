@@ -46,9 +46,11 @@ public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
         GameManagerFullAuth.Instance.LevelManager = this;
         _roomName.text = $"Room Name: {PhotonNetwork.CurrentRoom.Name.ToString()}";
         _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
-    }
+        
+        MasterManager.Instance.RPCMaster("RequestConnectPlayer", PhotonNetwork.LocalPlayer);
+        }
 
-    public PlayerModel Spawn()    // Hice que devuelva el playermodel que spawnea para que quede en el mastermanager, no se si funciona(?
+    public PlayerModel SpawnPlayer()    // Hice que devuelva el playermodel que spawnea para que quede en el mastermanager, no se si funciona(?
     {
         if (PhotonNetwork.CurrentRoom == null) return null;
         if (GameStarted) return null;
@@ -67,7 +69,7 @@ public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
 
                 // Instantiate Looking at Centre.
 
-                var player = PhotonNetwork.Instantiate("PlayerFullAuth", spawns[playerNumber - 1].position, Quaternion.identity);
+                var player = PhotonNetwork.Instantiate("PlayerFA", spawns[playerNumber - 1].position, Quaternion.identity);
                 player.transform.right = (-spawns[playerNumber - 1].position).normalized;
 
                 player.GetComponent<PlayerModel>().loseAction += LoseScreen;
@@ -80,7 +82,7 @@ public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
         return null;
         
     }
-    public void SpawnProjectile(PlayerModel owner)    // Cambié el owner a PlayerModel porque el photonview siempre va a ser el del master
+    public void SpawnProjectile(PlayerModel owner)    // Cambiï¿½ el owner a PlayerModel porque el photonview siempre va a ser el del master
     {
         var projectile = PhotonNetwork.Instantiate("ProjectileFA", owner.transform.position, owner.transform.rotation * Quaternion.Euler(0f, 0f, 180f));
         projectile.GetComponent<ProjectileFullAuth>().Initialize(owner);

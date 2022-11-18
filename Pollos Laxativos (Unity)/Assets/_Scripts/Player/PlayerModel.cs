@@ -86,12 +86,6 @@ public class PlayerModel : MonoBehaviourPun
     /// <summary>
     /// Instantiates a Projectile with its Owner.
     /// </summary>
-    public void Attack(PhotonView owner)
-    {
-        GameManager.Instance.LevelManager.SpawnProjectile(owner);
-        _attackCooldown = _originalAttackCooldown;
-    }
-
     public void AttackFA()
     {
         GameManagerFullAuth.Instance.LevelManager.SpawnProjectile(this);

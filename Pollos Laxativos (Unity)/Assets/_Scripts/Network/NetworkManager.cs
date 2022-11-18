@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private string _gameScene = "Game";
     [SerializeField] private TMP_Text _statusText;
     [SerializeField] private MenuManager _menuManager;
 
@@ -158,7 +159,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         InteractableGameButton(false);
 
         // Loads Game Scene
-        PhotonNetwork.LoadLevel("Game");
+        PhotonNetwork.LoadLevel(_gameScene);
     }
 
     /// <summary>
