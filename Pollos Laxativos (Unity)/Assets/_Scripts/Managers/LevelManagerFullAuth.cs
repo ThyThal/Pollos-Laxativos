@@ -99,7 +99,7 @@ public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
 
             int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
 
-            if (playerCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
+            if (playerCount >= 2)
             {
                 Debug.LogWarning("[Level Manager]: Starting Countdown.");
 
