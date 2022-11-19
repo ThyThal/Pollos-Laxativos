@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManagerFullAuth : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     #region Game Manager Instance
-    public static GameManagerFullAuth Instance;
+    public static GameManager Instance;
     private void Awake()
     {
         if (Instance == null)
@@ -21,9 +21,9 @@ public class GameManagerFullAuth : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] private LevelManagerFullAuth _levelManager;
+    [SerializeField] private LevelManager _levelManager;
 
-    public LevelManagerFullAuth LevelManager
+    public LevelManager LevelManager
     {
         get { return _levelManager; }
         set { _levelManager = value; }

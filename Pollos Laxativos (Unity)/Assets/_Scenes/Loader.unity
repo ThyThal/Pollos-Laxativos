@@ -3435,24 +3435,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2023165701}
   m_CullTransparentMesh: 1
---- !u!1 &2110161770 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4825872156860294050, guid: d70b509cd3329f94e94ca3d33751bbea, type: 3}
-  m_PrefabInstance: {fileID: 3777695724484356546}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2110161771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2110161770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d593d782343de6449939e3e285f5a62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _levelManager: {fileID: 0}
 --- !u!1 &2129125985
 GameObject:
   m_ObjectHideFlags: 0
@@ -3805,6 +3787,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 667439929, guid: d70b509cd3329f94e94ca3d33751bbea, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4825872156860294050, guid: d70b509cd3329f94e94ca3d33751bbea, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -3853,6 +3839,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4202226003205385362, guid: d70b509cd3329f94e94ca3d33751bbea, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d70b509cd3329f94e94ca3d33751bbea, type: 3}

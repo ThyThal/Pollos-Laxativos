@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class ProjectileFullAuth : MonoBehaviourPun
+public class ProjectileController : MonoBehaviourPun
 {
     [SerializeField] private float _speed = 1f;
     [SerializeField] private float _force = 10f;
@@ -21,18 +21,18 @@ public class ProjectileFullAuth : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
+        if (!photonView.IsMine) return;
         transform.position += transform.right * _speed * Time.deltaTime;
-        transform.localScale += transform.localScale * 1.1f * Time.deltaTime;
+        //transform.localScale += transform.localScale * 1.1f * Time.deltaTime;
 
         time += Time.deltaTime;
 
         if (time > 5f)
         {
-            if (photonView.IsMine)
-            {
-                Debug.LogWarning("Extra Projectile Destroyed.");
-                PhotonNetwork.Destroy(this.gameObject);
-            }
+
+            Debug.LogWarning("Extra Projectile Destroyed.");
+            _isDestroy = true;
+            PhotonNetwork.Destroy(this.gameObject);
         }
     }
 
@@ -54,22 +54,22 @@ public class ProjectileFullAuth : MonoBehaviourPun
     {
         if (!photonView.IsMine || _isDestroy || _owner == null) return;
 
-        PhotonView player = collision.gameObject?.GetComponent<PhotonView>();
-        if (player != null && player != _owner)
+        PlayerModel playerModel = collision.gameObject.GetComponent<PlayerModel>();
+        if (playerModel != null && playerModel != _owner)
         {
-            PlayerModel playerModel = player.gameObject?.GetComponent<PlayerModel>();
-
             if (playerModel != null)
             {
                 if (playerModel.IsAlive)
                 {
                     _isDestroy = true;
                     Vector2 recoil = transform.right * _force;
-                    playerModel.photonView.RPC("Recoil", RpcTarget.OthersBuffered, recoil);
+                    playerModel.photonView.RPC("Recoil", playerModel.photonView.Owner, recoil);
                     PhotonNetwork.Destroy(this.gameObject);
                 }
             }
         }
+
+        // Return if not Master.
     }
 
     /// <summary>
@@ -82,11 +82,8 @@ public class ProjectileFullAuth : MonoBehaviourPun
 
         if (collision.gameObject.CompareTag("Arena"))
         {
-            if (photonView.AmOwner)
-            {
-                PhotonNetwork.Destroy(this.gameObject);
-                _isDestroy = true;
-            }
+            PhotonNetwork.Destroy(this.gameObject);
+            _isDestroy = true;
         }
     }
 

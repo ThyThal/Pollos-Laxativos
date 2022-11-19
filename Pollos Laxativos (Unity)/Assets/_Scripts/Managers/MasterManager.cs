@@ -7,7 +7,7 @@ using Photon.Realtime;
 public class MasterManager : MonoBehaviourPunCallbacks
 {
     static MasterManager _instance;
-    public GameManagerFullAuth gameManager;
+    public GameManager gameManager;
 
     Dictionary<Player, PlayerModel> _dicChars = new Dictionary<Player, PlayerModel>();
     Dictionary<PlayerModel, Player> _dicPlayer = new Dictionary<PlayerModel, Player>();
@@ -31,6 +31,20 @@ public class MasterManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private void Update()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (var item in _dicChars)
+            {
+                if (item.Value.CanAttack)
+                {
+                    item.Value.DoAttack();
+                }
+            }
+        }
+    }
+
     public void RPCMaster(string name, params object[] p)
     {
         RPC(name, PhotonNetwork.MasterClient, p);
@@ -43,9 +57,9 @@ public class MasterManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RequestConnectPlayer(Player client)
     {
-        
+
         //GameObject obj = PhotonNetwork.Instantiate("CharacterFullAuth", Vector3.zero, Quaternion.identity);
-        var character = GameManagerFullAuth.Instance.LevelManager.SpawnPlayer();
+        var character = GameManager.Instance.LevelManager.SpawnPlayer();
         photonView.RPC("UpdatePlayer", RpcTarget.All, client, character.photonView.ViewID);
     }
 
@@ -54,8 +68,18 @@ public class MasterManager : MonoBehaviourPunCallbacks
     {
         PhotonView pv = PhotonView.Find(id);
         var character = pv.gameObject.GetComponent<PlayerModel>();
-        _dicChars[client] = character;
-        _dicPlayer[character] = client;
+
+        if (!_dicChars.ContainsKey(client))
+        {
+            _dicChars[client] = character;
+        }
+
+        if (!_dicPlayer.ContainsKey(character))
+        {
+            _dicPlayer[character] = client;
+        }
+
+
     }
 
     [PunRPC]
@@ -64,8 +88,8 @@ public class MasterManager : MonoBehaviourPunCallbacks
         if (_dicChars.ContainsKey(client))
         {
             var character = _dicChars[client];
-            character.Move(dir);
-            character.Rotate(dir);
+            character.DoMove(dir);
+            character.DoRotate(dir);
         }
     }
 
@@ -75,7 +99,7 @@ public class MasterManager : MonoBehaviourPunCallbacks
         if (_dicChars.ContainsKey(client))
         {
             var character = _dicChars[client];
-            character.AttackFA();
+            character.DoAttack();
         }
     }
 
@@ -85,7 +109,8 @@ public class MasterManager : MonoBehaviourPunCallbacks
         if (_dicChars.ContainsKey(client))
         {
             var character = _dicChars[client];
-            character.Dash();
+            if (character.CanDash)
+                character.DoDash();
         }
     }
 
@@ -98,8 +123,20 @@ public class MasterManager : MonoBehaviourPunCallbacks
         return null;
     }
 
-    public override void OnPlayerLeftRoom(Player player) // Destruimos el player aca en vez de en el controller cuando se desconecta
+    public override void OnPlayerLeftRoom(Player player)
     {
         PhotonNetwork.Destroy(_dicChars[player].gameObject);
+    }
+
+    [PunRPC]
+    public void StartCountdown(Player client)
+    {
+       // GameManager.Instance.LevelManager.photonView.RPC;
+    }
+
+    [PunRPC]
+    public void DoCountdown(string status)
+    {
+        GameManager.Instance.LevelManager.UpdateCountdown(status);
     }
 }

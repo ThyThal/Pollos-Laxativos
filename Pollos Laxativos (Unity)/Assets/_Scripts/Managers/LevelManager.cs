@@ -6,7 +6,7 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
+public class LevelManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private List<Transform> _3playersSpawns;
     [SerializeField] private List<Transform> _4playersSpawns;
@@ -33,22 +33,22 @@ public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
+        //if (!PhotonNetwork.IsMasterClient) Destroy(this);
+
         _playerSpawns = new Dictionary<byte, List<Transform>>();
         _playerSpawns.Add(3, _3playersSpawns);
         _playerSpawns.Add(4, _4playersSpawns);
         _playerSpawns.Add(5, _5playersSpawns);
-
-        //Spawn();
     }
 
     private void Start()
     {
-        GameManagerFullAuth.Instance.LevelManager = this;
+        GameManager.Instance.LevelManager = this;
         _roomName.text = $"Room Name: {PhotonNetwork.CurrentRoom.Name.ToString()}";
         _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
-        
+
         MasterManager.Instance.RPCMaster("RequestConnectPlayer", PhotonNetwork.LocalPlayer);
-        }
+    }
 
     public PlayerModel SpawnPlayer()    // Hice que devuelva el playermodel que spawnea para que quede en el mastermanager, no se si funciona(?
     {
@@ -85,7 +85,7 @@ public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
     public void SpawnProjectile(PlayerModel owner)    // Cambi� el owner a PlayerModel porque el photonview siempre va a ser el del master
     {
         var projectile = PhotonNetwork.Instantiate("ProjectileFA", owner.transform.position, owner.transform.rotation * Quaternion.Euler(0f, 0f, 180f));
-        projectile.GetComponent<ProjectileFullAuth>().Initialize(owner);
+        projectile.GetComponent<ProjectileController>().Initialize(owner);
     }
 
     // Photon
@@ -94,9 +94,7 @@ public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             if (_gameStarted) return;
-
             
-
             int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
 
             if (playerCount >= 2)
@@ -142,7 +140,7 @@ public class LevelManagerFullAuth : MonoBehaviourPunCallbacks
             photonView.RPC("AddPlayers", RpcTarget.Others, playerOwner.Owner);
         }
 
-        photonView.RPC("RunningGame", RpcTarget.Others, true);
+        photonView.RPC("RunningGame", RpcTarget.All, true);
 
         yield return null;
     }

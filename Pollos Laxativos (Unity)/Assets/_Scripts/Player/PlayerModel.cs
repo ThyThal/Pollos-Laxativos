@@ -22,10 +22,11 @@ public class PlayerModel : MonoBehaviourPun
     public Action<Player> winAction = delegate { };
 
     public bool IsAlive => _isAlive;
-    public bool CanAttack => _attackCooldown < 0;
-    public bool CanDash => _dashCooldown < 0;
+    public bool CanAttack => GameStarted && _attackCooldown <= 0;
+    public bool CanDash => GameStarted && _dashCooldown <= 0;
+    public bool GameStarted => GameManager.Instance.LevelManager.GameStarted;
 
-    GameManagerFullAuth _manager;
+    GameManager _manager;
 
     private void Awake()
     {
@@ -57,7 +58,7 @@ public class PlayerModel : MonoBehaviourPun
     /// <summary>
     /// Moves Player with Rigidbody Force.
     /// </summary>
-    public void Move(Vector2 direction)
+    public void DoMove(Vector2 direction)
     {
         // Move Rigidbody with Constant Force.
         _rigidbody.AddForce(direction * _walkSpeed, ForceMode2D.Force);
@@ -66,7 +67,7 @@ public class PlayerModel : MonoBehaviourPun
     /// <summary>
     /// Impulses Player Forwards.
     /// </summary>
-    public void Dash()
+    public void DoDash()
     {
         // Do Dash with Impulse.
         _rigidbody.AddForce(transform.right * _walkSpeed, ForceMode2D.Impulse);
@@ -78,7 +79,7 @@ public class PlayerModel : MonoBehaviourPun
     /// <summary>
     /// Rotates Player Transform with Lerp.
     /// </summary>
-    public void Rotate(Vector2 dir)
+    public void DoRotate(Vector2 dir)
     {
         transform.right = Vector2.Lerp(transform.right, dir, _rotateSpeed * Time.deltaTime);
     }
@@ -86,9 +87,9 @@ public class PlayerModel : MonoBehaviourPun
     /// <summary>
     /// Instantiates a Projectile with its Owner.
     /// </summary>
-    public void AttackFA()
+    public void DoAttack()
     {
-        GameManagerFullAuth.Instance.LevelManager.SpawnProjectile(this);
+        GameManager.Instance.LevelManager.SpawnProjectile(this);
         _attackCooldown = _originalAttackCooldown;
     }
 
@@ -117,7 +118,7 @@ public class PlayerModel : MonoBehaviourPun
         }
     }
 
-    public GameManagerFullAuth SetManager
+    public GameManager SetManager
     {
         set
         {
