@@ -6,7 +6,7 @@ using UnityEngine;
 using Photon.Chat;
 using Photon.Pun;
 using TMPro;
-using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 public class Chaterino : MonoBehaviour, IChatClientListener
 {
@@ -15,6 +15,8 @@ public class Chaterino : MonoBehaviour, IChatClientListener
     [SerializeField] private TMP_InputField _chatInput;
     [SerializeField] private string _channel;
     [SerializeField] private string _command = "/w";
+    [SerializeField] private KeyCode _chatBind = KeyCode.Return;
+    [SerializeField] private bool _enabledInput = false;
 
     private void Start()
     {
@@ -28,6 +30,8 @@ public class Chaterino : MonoBehaviour, IChatClientListener
     private void Update()
     {
         _chatClient.Service();
+
+        UpdateInput();
     }
 
     public void DebugReturn(DebugLevel level, string message)
@@ -123,5 +127,33 @@ public class Chaterino : MonoBehaviour, IChatClientListener
         }
 
         _chatInput.text = "";
+    }
+
+    private void UpdateInput()
+    {
+        if (Input.GetKeyDown(_chatBind))
+        {
+            if (_enabledInput == false)
+            {
+                EnableInput();
+            }
+            
+            else if (_enabledInput == true)
+            {
+                DisableInput();
+            }
+        }
+    }
+
+    private void EnableInput()
+    {
+        _enabledInput = true;
+        _chatInput.gameObject.SetActive(true);
+    }
+
+    private void DisableInput()
+    {
+        _enabledInput = false;
+        _chatInput.gameObject.SetActive(false);
     }
 }

@@ -26,7 +26,9 @@ public class LevelManager : MonoBehaviourPunCallbacks
     [SerializeField] private bool _gameStarted = false;
 
     private bool _ended = false;
+    private bool _starting = false;
 
+    public bool Starting => _starting;
     public bool GameStarted => _gameStarted;
 
     [SerializeField] private List<Player> playersList = new List<Player>();
@@ -100,7 +102,6 @@ public class LevelManager : MonoBehaviourPunCallbacks
             if (playerCount >= 2)
             {
                 Debug.LogWarning("[Level Manager]: Starting Countdown.");
-
                 StartCoroutine(Countdown());
             }
         }
@@ -110,6 +111,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
 
     private IEnumerator Countdown()
     {
+        _starting = true;
         yield return new WaitForSeconds(1);
 
         Debug.LogWarning("[Level Manager]: 3...");
