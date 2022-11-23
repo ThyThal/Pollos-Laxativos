@@ -125,7 +125,7 @@ public class MasterManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player player)
     {
-        PhotonNetwork.Destroy(_dicChars[player].gameObject);
+        if(_dicChars[player].gameObject != null) PhotonNetwork.Destroy(_dicChars[player].gameObject);
     }
 
     [PunRPC]
