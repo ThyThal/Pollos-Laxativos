@@ -100,7 +100,10 @@ public class PlayerModel : MonoBehaviourPun
         GameObject username = GetComponent<PlayerView>().Username.gameObject;
 
         if (photonView.IsMine)
+        {
+            loseAction.Invoke(MasterManager.Instance.GetClientFromModel(this));
             PhotonNetwork.Destroy(this.gameObject);
+        }
     }
 
     private void AttackTimer()
@@ -126,4 +129,15 @@ public class PlayerModel : MonoBehaviourPun
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (collision.gameObject.CompareTag("Arena"))
+            {
+
+                Die();
+            }
+        }
+    }
 }

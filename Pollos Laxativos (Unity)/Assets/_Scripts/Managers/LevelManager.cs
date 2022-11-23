@@ -135,9 +135,12 @@ public class LevelManager : MonoBehaviourPunCallbacks
 
         foreach (var player in players)
         {
-            PhotonView playerOwner = player.GetPhotonView();
-            playersList.Add(playerOwner.Owner);
-            photonView.RPC("AddPlayers", RpcTarget.Others, playerOwner.Owner);
+            PlayerModel model = player.GetComponent<PlayerModel>();
+            //PhotonView playerOwner = player.GetPhotonView();
+            //playersList.Add(playerOwner.Owner);
+            //photonView.RPC("AddPlayers", RpcTarget.Others, playerOwner.Owner);
+            playersList.Add(MasterManager.Instance.GetClientFromModel(model));
+            photonView.RPC("AddPlayers", RpcTarget.Others, MasterManager.Instance.GetClientFromModel(model));
         }
 
         photonView.RPC("RunningGame", RpcTarget.All, true);
@@ -151,6 +154,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
         {
             _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
             photonView.RPC("RemovePlayers", RpcTarget.All, otherPlayer);
+            //photonView.RPC("RemovePlayers", RpcTarget.All, MasterManager.Instance.);
         }
     }
 

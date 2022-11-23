@@ -83,7 +83,7 @@ public class MasterManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void RequestMove(Player client, Vector3 dir)
+    public void RequestMove(Player client, Vector2 dir)
     {
         if (_dicChars.ContainsKey(client))
         {

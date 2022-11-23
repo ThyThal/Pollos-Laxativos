@@ -27,7 +27,10 @@ public class PlayerView : MonoBehaviourPun
 
         if (photonView.IsMine)
         {
-            var username = photonView.Owner.NickName;
+            var model = GetComponent<PlayerModel>();
+            var client = MasterManager.Instance.GetClientFromModel(model);
+            var username = client.NickName;
+            //var username = photonView.Owner.NickName;
             photonView.RPC("UpdateUsername", RpcTarget.AllBuffered, username);
         }
 
@@ -40,7 +43,10 @@ public class PlayerView : MonoBehaviourPun
     [PunRPC]
     public void RequestUsername(Player client)
     {
-        photonView.RPC("UpdateUsername", client, photonView.Owner.NickName);
+        var model = GetComponent<PlayerModel>();
+        var clientFromModel = MasterManager.Instance.GetClientFromModel(model);
+        var name = clientFromModel.NickName;
+        photonView.RPC("UpdateUsername", client, name);
     }
 
     [PunRPC]

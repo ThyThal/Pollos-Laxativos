@@ -31,10 +31,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(_dashKey))
             MasterManager.Instance.RPCMaster("RequestDash", PhotonNetwork.LocalPlayer);
         //}
-
-        // Cooldowns
-        //DashTimer();
-        //AttackTimer();
     }
 
     private void FixedUpdate()
@@ -52,19 +48,4 @@ public class PlayerController : MonoBehaviour
             MasterManager.Instance.RPCMaster("RequestMove", PhotonNetwork.LocalPlayer, direction);
         }
     }
-
-    //private void AttackTimer() // Puse los cooldowns ac� 
-    //{
-    //    if (_attackCooldown > 0)
-    //    {
-    //        _attackCooldown -= Time.deltaTime;
-    //    }
-    //}
-    //private void DashTimer()
-    //{
-    //    if (_dashCooldown > 0)
-    //    {
-    //        _dashCooldown -= Time.deltaTime;
-    //    }
-    //}
 }
