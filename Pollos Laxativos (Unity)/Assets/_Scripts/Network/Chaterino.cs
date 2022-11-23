@@ -67,7 +67,8 @@ public class Chaterino : MonoBehaviour, IChatClientListener
 
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
-        _chatContent.text += $"<color=pink>{sender}:</color> {message}\n";
+        string color = "<color=#FF00FF>";
+        _chatContent.text += $"{color}{sender}:</color> {message}\n";
     }
 
     public void OnSubscribed(string[] channels, bool[] results)
@@ -99,7 +100,7 @@ public class Chaterino : MonoBehaviour, IChatClientListener
         // Splits Input Text.
         string[] messageWords = message.Split(' ');
 
-        // Sending a Command.
+        // Sending a Whisper Command.
         if (messageWords.Length > 2 && messageWords[0] == _command)
         {
             var target = messageWords[1];
@@ -120,5 +121,7 @@ public class Chaterino : MonoBehaviour, IChatClientListener
         {
             _chatClient.PublishMessage(_channel, message);
         }
+
+        _chatInput.text = "";
     }
 }
