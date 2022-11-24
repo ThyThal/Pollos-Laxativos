@@ -60,6 +60,7 @@ public class MasterManager : MonoBehaviourPunCallbacks
 
         //GameObject obj = PhotonNetwork.Instantiate("CharacterFullAuth", Vector3.zero, Quaternion.identity);
         var character = GameManager.Instance.LevelManager.SpawnPlayer();
+        character.GetComponent<PlayerModel>().owner = client.NickName;
         photonView.RPC("UpdatePlayer", RpcTarget.All, client, character.photonView.ViewID);
     }
 
@@ -125,7 +126,7 @@ public class MasterManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player player)
     {
-        if(_dicChars[player].gameObject != null) PhotonNetwork.Destroy(_dicChars[player].gameObject);
+        if(_dicChars[player] != null) PhotonNetwork.Destroy(_dicChars[player].gameObject);
     }
 
     [PunRPC]
@@ -139,4 +140,5 @@ public class MasterManager : MonoBehaviourPunCallbacks
     {
         GameManager.Instance.LevelManager.UpdateCountdown(status);
     }
+
 }

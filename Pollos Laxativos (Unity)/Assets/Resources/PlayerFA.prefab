@@ -279,6 +279,7 @@ MonoBehaviour:
   _rotateSpeed: 3
   _attackCooldown: 0.4
   _dashCooldown: 1
+  owner: 
 --- !u!114 &4150835004572320145
 MonoBehaviour:
   m_ObjectHideFlags: 0

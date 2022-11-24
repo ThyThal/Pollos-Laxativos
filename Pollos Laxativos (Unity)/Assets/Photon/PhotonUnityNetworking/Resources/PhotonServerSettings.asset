@@ -58,6 +58,8 @@ MonoBehaviour:
   - UpdatePlayer
   - UpdateUsername
   - WinScreen
+  - LoseScreen
+  - SyncTime
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

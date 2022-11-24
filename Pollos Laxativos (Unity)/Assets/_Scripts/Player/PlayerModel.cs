@@ -28,6 +28,8 @@ public class PlayerModel : MonoBehaviourPun
 
     GameManager _manager;
 
+    public string owner;
+
     private void Awake()
     {
         if (_rigidbody == null) _rigidbody = GetComponent<Rigidbody2D>();
