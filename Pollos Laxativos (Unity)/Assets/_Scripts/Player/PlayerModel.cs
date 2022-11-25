@@ -103,6 +103,8 @@ public class PlayerModel : MonoBehaviourPun
 
         if (photonView.IsMine)
         {
+            PhotonNetwork.Instantiate("Blood", transform.position, Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(0f, 360f))));
+
             loseAction.Invoke(MasterManager.Instance.GetClientFromModel(this));
             PhotonNetwork.Destroy(this.gameObject);
         }

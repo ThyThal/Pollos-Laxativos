@@ -52,9 +52,9 @@ public class LevelManager : MonoBehaviourPunCallbacks
     {
         GameManager.Instance.LevelManager = this;
         _roomName.text = $"Room Name: {PhotonNetwork.CurrentRoom.Name.ToString()}";
-        _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount - 1}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
 
-        MasterManager.Instance.RPCMaster("RequestConnectPlayer", PhotonNetwork.LocalPlayer);
+        if(!PhotonNetwork.IsMasterClient) MasterManager.Instance.RPCMaster("RequestConnectPlayer", PhotonNetwork.LocalPlayer);
 
         currentTime = 0f;
 
@@ -84,7 +84,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
             List<Transform> spawns;
             if (_playerSpawns.TryGetValue(PhotonNetwork.CurrentRoom.MaxPlayers, out spawns))
             {
-                var playerNumber = PhotonNetwork.CurrentRoom.PlayerCount;
+                var playerNumber = PhotonNetwork.CurrentRoom.PlayerCount - 1;
                 Debug.Log($"[Level Manager]: Spawning Player with ID {playerNumber}.");
 
                 // Instantiate Looking at Centre.
@@ -115,7 +115,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
         {
             if (_gameStarted) return;
             
-            int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+            int playerCount = PhotonNetwork.CurrentRoom.PlayerCount - 1;
 
             if (playerCount >= 2)
             {
@@ -124,7 +124,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
             }
         }
 
-        _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount - 1}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
     }
 
     private IEnumerator Countdown()
@@ -228,6 +228,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
 
         if (playersList.Count == 1 && PhotonNetwork.LocalPlayer != looser)
         {
+            // Si es el master que muestre otra cosa, o si queres sacamos la camara
             _winScreen.SetActive(true);
             photonView.RPC("RunningGame", RpcTarget.All, false);
             Debug.Log(playersList[0].NickName);

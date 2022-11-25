@@ -16,6 +16,14 @@ public class PlayerController : MonoBehaviour
     public bool CanAttack => GameStarted && _attackCooldown < 0;
     public bool CanDash => GameStarted && _dashCooldown < 0;
 
+    private void Start()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //Destroy(Camera.main.gameObject);
+            Destroy(this);
+        }
+    }
     void Update()
     {
         // Attack
