@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Voice.PUN;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
             //Destroy(Camera.main.gameObject);
             Destroy(this);
         }
+        else PhotonNetwork.Instantiate("VoiceObject", Vector3.zero, Quaternion.identity);
     }
     void Update()
     {
@@ -39,6 +41,15 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(_dashKey))
             MasterManager.Instance.RPCMaster("RequestDash", PhotonNetwork.LocalPlayer);
         //}
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            PunVoiceClient.Instance.PrimaryRecorder.TransmitEnabled = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.V))
+        {
+            PunVoiceClient.Instance.PrimaryRecorder.TransmitEnabled = false;
+        }
     }
 
     private void FixedUpdate()

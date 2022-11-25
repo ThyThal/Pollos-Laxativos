@@ -37,7 +37,7 @@ public class MasterManager : MonoBehaviourPunCallbacks
         {
             foreach (var item in _dicChars)
             {
-                if (item.Value.CanAttack)
+                if (item.Value.CanAttack && item.Value != null)
                 {
                     item.Value.DoAttack();
                 }

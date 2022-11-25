@@ -14,7 +14,7 @@ public class MenuManager : MonoBehaviour
 
     public string Username => _inputUsername.text;
     public string RoomName => _inputRoomName.text;
-    public byte MaxPlayer => (byte)_sliderMaxPlayersSlider.value;
+    public byte MaxPlayer => (byte)(_sliderMaxPlayersSlider.value + 1);
 
     /// <summary>
     /// Changes if Room Settings are Interactable.

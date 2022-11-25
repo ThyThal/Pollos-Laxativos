@@ -52,7 +52,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
     {
         GameManager.Instance.LevelManager = this;
         _roomName.text = $"Room Name: {PhotonNetwork.CurrentRoom.Name.ToString()}";
-        _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount - 1}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount - 1}/{PhotonNetwork.CurrentRoom.MaxPlayers - 1}";
 
         if(!PhotonNetwork.IsMasterClient) MasterManager.Instance.RPCMaster("RequestConnectPlayer", PhotonNetwork.LocalPlayer);
 
@@ -65,7 +65,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
         if (_gameStarted)
         {
             currentTime += Time.deltaTime;
-            if (PhotonNetwork.IsMasterClient) return;
+            if (!PhotonNetwork.IsMasterClient) return;
             _arena.localScale = Vector2.Lerp(_arena.localScale, new Vector2(2f, 2f), Time.deltaTime / _shrinkSoftness);
         }
     }
@@ -82,7 +82,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
 
             // Get Available Spawns.
             List<Transform> spawns;
-            if (_playerSpawns.TryGetValue(PhotonNetwork.CurrentRoom.MaxPlayers, out spawns))
+            if (_playerSpawns.TryGetValue((byte)(PhotonNetwork.CurrentRoom.MaxPlayers - 1), out spawns))
             {
                 var playerNumber = PhotonNetwork.CurrentRoom.PlayerCount - 1;
                 Debug.Log($"[Level Manager]: Spawning Player with ID {playerNumber}.");
@@ -117,14 +117,14 @@ public class LevelManager : MonoBehaviourPunCallbacks
             
             int playerCount = PhotonNetwork.CurrentRoom.PlayerCount - 1;
 
-            if (playerCount >= 2)
+            if (playerCount >= PhotonNetwork.CurrentRoom.MaxPlayers - 1)
             {
                 Debug.LogWarning("[Level Manager]: Starting Countdown.");
                 StartCoroutine(Countdown());
             }
         }
 
-        _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount - 1}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+        _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount - 1}/{PhotonNetwork.CurrentRoom.MaxPlayers - 1}";
     }
 
     private IEnumerator Countdown()
@@ -163,6 +163,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
             photonView.RPC("AddPlayers", RpcTarget.Others, MasterManager.Instance.GetClientFromModel(model));
         }
 
+        PhotonNetwork.CurrentRoom.IsOpen = false;
         photonView.RPC("RunningGame", RpcTarget.All, true);
         StartTimeSync();
 
@@ -173,11 +174,30 @@ public class LevelManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.CurrentRoom.PlayerCount > 0)
         {
-            _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
-            photonView.RPC("RemovePlayers", RpcTarget.All, otherPlayer);
+            _startingText.text = $"Waiting for Players {PhotonNetwork.CurrentRoom.PlayerCount-1}/{PhotonNetwork.CurrentRoom.MaxPlayers-1}";
+            if (PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC("RemovePlayers", RpcTarget.All, otherPlayer);
+            }
             //photonView.RPC("RemovePlayers", RpcTarget.All, MasterManager.Instance.);
+            
         }
     }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        CloseRoom();
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CloseRoom();
+        }
+    }
+
+
 
     [PunRPC]
     public void UpdateCountdown(string status)
@@ -273,5 +293,17 @@ public class LevelManager : MonoBehaviourPunCallbacks
     public void SyncTime(float time)
     {
         currentTime = time;
+    }
+
+    public void CloseRoom()
+    {
+        photonView.RPC("QuitRoom", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void QuitRoom()
+    {
+        PhotonNetwork.LoadLevel("Loader");
+        PhotonNetwork.LeaveRoom();
     }
 }

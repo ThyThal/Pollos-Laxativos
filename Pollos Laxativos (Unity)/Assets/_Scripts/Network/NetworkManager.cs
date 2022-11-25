@@ -89,6 +89,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         // Creates Room Settings
         RoomOptions roomOptions = new RoomOptions();
+        //int maxPlayer = (int)_menuManager.MaxPlayer + 1;
+        //roomOptions.MaxPlayers = (byte)maxPlayer;
         roomOptions.MaxPlayers = _menuManager.MaxPlayer;
         roomOptions.IsOpen = true;
         roomOptions.IsVisible = true;

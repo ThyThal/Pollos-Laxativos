@@ -16,7 +16,7 @@ MonoBehaviour:
     AppIdRealtime: f10edd29-b8b9-4ac9-9074-2d381a40dea4
     AppIdFusion: 
     AppIdChat: e4052a18-27db-40d9-8167-941b0b50cfa8
-    AppIdVoice: 
+    AppIdVoice: b03beef3-5027-4d45-ba26-177be3e5fe2b
     AppVersion: 1
     UseNameServer: 1
     FixedRegion: 
@@ -60,6 +60,7 @@ MonoBehaviour:
   - WinScreen
   - LoseScreen
   - SyncTime
+  - QuitRoom
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
